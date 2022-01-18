@@ -1,8 +1,8 @@
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-
+const path = require('path');
 const fs = require('fs');
-const mnemonic = fs.readFileSync("./keys/ropsten_mnemonic").toString().trim();
+const mnemonic = fs.readFileSync(path.join(__dirname, './keys/ropsten_mnemonic'), 'utf-8');
 const config = require("./config/networks");
 
 module.exports = {
@@ -16,6 +16,11 @@ module.exports = {
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50),
       gasPrice: 15000000001,
     },
+    development: {
+      host: "127.0.0.1",     // Localhost (default: none)
+      port: 7545,            // Standard Ethereum port (default: none)
+      network_id: "*",       // Any network (default: none)
+    }
   },
 
   // Configure your compilers
