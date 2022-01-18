@@ -31,6 +31,10 @@ contract Rewards {
     }
 
     function setRewards() public payable onlyOwner {
+        require(
+            usdToken.balanceOf(address(this)) > 0,
+            "do not have rewards on contract"
+        );
         index = index + 1;
         for (uint8 i = 0; i < allStakers.length; i++) {
             address wallet = allStakers[i];
