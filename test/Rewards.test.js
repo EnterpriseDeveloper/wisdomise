@@ -19,8 +19,11 @@ contract('Rewards', (accounts) => {
         amount: "90",
     }, {
         acc: accounts[3],
-        amount: "100",
+        amount: "50",
     }];
+    let firstRewardsAmount = ["100", "900"];
+    let secondRewardsAmount = ["50", "450", "500"];
+
 
     beforeEach(async () => {
         wToken = await WToken.deployed();
@@ -67,7 +70,7 @@ contract('Rewards', (accounts) => {
         assert.equal(totalAmount, balance, `Staked amount is not a ${totalAmount}`)
     })
 
-    it("Send USDtoken to reward contract", async () => {
+    it("Send USDtoken to Reward contract", async () => {
         let amount = web3.utils.toWei(usdAmount, "ether");
         await usdToken.transfer(rewards.address, amount, { from: owner })
 
@@ -76,19 +79,51 @@ contract('Rewards', (accounts) => {
         assert.equal(usdAmount, balance, `Send first rewards must error`)
     })
 
-    it("Execute function for rewarding first time", async () =>{
-        let rewardsAmount = ["100", "900"]
-        await rewards.setRewards({from: owner});
-        
-        for (let i = 0; i < rewardsAmount.length; i++) {
+    it("Execute function for rewarding first time", async () => {
+        await rewards.setRewards({ from: owner });
+
+        for (let i = 0; i < firstRewardsAmount.length; i++) {
             let bal = await usdToken.balanceOf(users[i].acc);
             let balance = web3.utils.fromWei(bal, "ether");
-            console.log(balance);
-            assert.equal(balance, rewardsAmount[i], `User by index ${i} does not received enought tokens`)
+            assert.equal(balance, firstRewardsAmount[i], `User by index ${i} does not received enought tokens`)
 
         }
     })
 
-    it("")
+    it("Stake token from last user", async () => {
+        let totalWtoken = 0;
+        let amount = web3.utils.toWei(users[2].amount, "ether");
+        await wToken.approve(rewards.address, amount, { from: users[2].acc })
+        await rewards.setStake(amount, { from: users[2].acc });
+
+        for (let i = 0; i < users.length; i++) {
+            totalWtoken = Number(users[i].amount) + totalWtoken;
+        }
+
+        let bal = await wToken.balanceOf(rewards.address);
+        let balance = web3.utils.fromWei(bal, "ether");
+        assert.equal(totalWtoken, Number(balance).toFixed(0), `Staked amount is not a ${totalWtoken}`)
+    })
+
+    it("Send USDtoken to Reward contract", async () => {
+        let amount = web3.utils.toWei(usdAmount, "ether");
+        await usdToken.transfer(rewards.address, amount, { from: owner })
+
+        let bal = await usdToken.balanceOf(rewards.address);
+        let balance = web3.utils.fromWei(bal, "ether");
+        assert.equal(usdAmount, balance, `Send first rewards must error`)
+    })
+
+    it("Execute function for rewarding second time", async () => {
+        await rewards.setRewards({ from: owner });
+
+        for (let i = 0; i < secondRewardsAmount.length; i++) {
+            let bal = await usdToken.balanceOf(users[i].acc);
+            let balance = web3.utils.fromWei(bal, "ether");
+            let rewAmount = firstRewardsAmount[i] == undefined ? secondRewardsAmount[i] : Number(firstRewardsAmount[i]) + Number(secondRewardsAmount[i])
+            assert.equal(balance, String(rewAmount), `User by index ${i} does not received enought tokens`)
+
+        }
+    })
 
 })
