@@ -19,7 +19,7 @@ contract Rewards {
     mapping(address => Staker) stakers;
     address[] public allStakers;
 
-    constructor(WToken _wTokenAddr, USDToken _usdTokenAddr) public payable {
+    constructor(WToken _wTokenAddr, USDToken _usdTokenAddr) payable {
         owner = msg.sender;
         wToken = _wTokenAddr;
         usdToken = _usdTokenAddr;
@@ -30,23 +30,14 @@ contract Rewards {
         _;
     }
 
-    // TODO check functionality
-    function setRewards(uint256 _amount) public payable onlyOwner {
-        require(
-            usdToken.allowance(msg.sender, address(this)) >= _amount,
-            "Allowance err"
-        );
-        require(
-            usdToken.transferFrom(msg.sender, address(this), _amount),
-            "Transfer err"
-        );
+    function setRewards() public payable onlyOwner {
         index = index + 1;
-
         for (uint8 i = 0; i < allStakers.length; i++) {
             address wallet = allStakers[i];
-            // TODO check function
-            uint256 amount = stakers[wallet].amount - (stakers[wallet].index - index) / 2;
-            require(usdToken.transfer(wallet, amount), "Transfer err");
+            uint256 amount = stakers[wallet].amount / (index - stakers[wallet].index);
+            if (amount > 0) {
+                require(usdToken.transfer(wallet, amount * 10), "Transfer err");
+            }
         }
     }
 

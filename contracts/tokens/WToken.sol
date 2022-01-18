@@ -9,7 +9,7 @@ contract WToken is ERC20 {
         uint256 initialSupply,
         string memory _name,
         string memory _symbol
-    ) public payable ERC20(_name, _symbol) {
+    ) payable ERC20(_name, _symbol) {
         _mint(msg.sender, initialSupply);
     }
 }
