@@ -21,8 +21,8 @@ contract('Rewards', (accounts) => {
         acc: accounts[3],
         amount: "50",
     }];
-    let firstRewardsAmount = ["100", "900"];
-    let secondRewardsAmount = ["50", "450", "500"];
+    let rewAm = ["100", "900"];
+    let secRewAm = ["50", "450", "500"];
 
 
     beforeEach(async () => {
@@ -82,10 +82,10 @@ contract('Rewards', (accounts) => {
     it("Execute function for rewarding first time", async () => {
         await rewards.setRewards({ from: owner });
 
-        for (let i = 0; i < firstRewardsAmount.length; i++) {
+        for (let i = 0; i < rewAm.length; i++) {
             let bal = await usdToken.balanceOf(users[i].acc);
             let balance = web3.utils.fromWei(bal, "ether");
-            assert.equal(balance, firstRewardsAmount[i], `User by index ${i} does not received enought tokens`)
+            assert.equal(balance, rewAm[i], `User by index ${i} does not received enought tokens`)
 
         }
     })
@@ -117,12 +117,11 @@ contract('Rewards', (accounts) => {
     it("Execute function for rewarding second time", async () => {
         await rewards.setRewards({ from: owner });
 
-        for (let i = 0; i < secondRewardsAmount.length; i++) {
+        for (let i = 0; i < secRewAm.length; i++) {
             let bal = await usdToken.balanceOf(users[i].acc);
             let balance = web3.utils.fromWei(bal, "ether");
-            let rewAmount = firstRewardsAmount[i] == undefined ? secondRewardsAmount[i] : Number(firstRewardsAmount[i]) + Number(secondRewardsAmount[i])
+            let rewAmount = rewAm[i] == undefined ? secRewAm[i] : Number(rewAm[i]) + Number(secRewAm[i])
             assert.equal(balance, String(rewAmount), `User by index ${i} does not received enought tokens`)
-
         }
     })
 

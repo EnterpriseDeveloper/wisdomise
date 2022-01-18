@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "deploy:ropsten": "truffle migrate --network ropsten --reset -all",
     "gen:ropsten-key": "node ./scripts/genKey.js ropsten",
     "test": "truffle test"
   },
