@@ -7,11 +7,16 @@
     "test": "test"
   },
   "scripts": {
+    "gen:ropsten-key": "node ./scripts/genKey.js ropsten",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.2"
+    "@openzeppelin/contracts": "^4.4.2",
+    "@truffle/hdwallet-provider": "^2.0.0",
+    "bip39": "^3.0.4",
+    "ethereumjs-wallet": "^1.0.2",
+    "web3": "^1.7.0"
   }
 }
