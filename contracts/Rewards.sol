@@ -8,7 +8,7 @@ contract Rewards {
     WToken public wToken;
     USDToken public usdToken;
 
-    address public owner;
+    address private owner;
     uint8 public index = 0;
 
     struct Staker {
